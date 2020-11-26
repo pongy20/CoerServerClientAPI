@@ -102,4 +102,16 @@ public class CoerServer extends Thread implements Server {
 	public void startServer() {
 		start();
 	}
+
+	@Override
+	public void broadcastMessage(Datapackage pack, List<CoerServerClientThread> apart) {
+		for (CoerServerClientThread thread : clients) {
+			if (apart != null) {
+				if (apart.contains(thread))
+					continue;
+			}
+			thread.send(pack);
+				
+		}
+	}
 }

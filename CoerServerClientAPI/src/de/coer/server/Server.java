@@ -1,6 +1,7 @@
 package de.coer.server;
 
 import java.net.Socket;
+import java.util.List;
 
 import de.coer.api.*;
 /**
@@ -25,5 +26,11 @@ public interface Server {
 	 * Starts the server
 	 */
 	public void startServer();
+	/**
+	 * Broadcasts a message to all clients which are not in apart list
+	 * @param pack
+	 * @param apart Clients which should not receive the message
+	 */
+	public void broadcastMessage(Datapackage pack, List<CoerServerClientThread> apart);
 	
 }
