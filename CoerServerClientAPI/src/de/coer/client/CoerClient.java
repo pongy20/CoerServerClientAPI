@@ -8,6 +8,10 @@ import java.util.Map;
 
 import de.coer.api.*;
 
+/**
+ * Implementation of Client Interface
+ * @author Eric Dupont, Corvin Zander
+ */
 public class CoerClient extends Socket implements Client {
 
 	private long clientID;

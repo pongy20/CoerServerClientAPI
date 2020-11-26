@@ -4,6 +4,7 @@ import de.coer.api.*;
 
 /**
  * Interface to use a client and send datapackages between client and server
+ * @author Corvin Zander, Eric Dupont
  */
 public interface Client {
 

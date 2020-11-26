@@ -10,6 +10,11 @@ import java.util.Map;
 
 import de.coer.api.*;
 
+/**
+ * Implementation of Server interface in a Thread
+ * @author Corvin Zander, Eric Dupont
+ *
+ */
 public class CoerServer extends Thread implements Server {
 
 	public static boolean debug = true;
@@ -25,6 +30,7 @@ public class CoerServer extends Thread implements Server {
 		this.port = port;
 		this.clients = new ArrayList<CoerServerClientThread>();
 		this.methods = new HashMap<String, Executeable>();
+		// register default disconnect method for clients
 		registerMethod(BasicIdentifier.DISCONNECT_CLIENT.getName(), new Executeable() {
 			
 			@Override

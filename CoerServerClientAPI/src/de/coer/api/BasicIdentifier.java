@@ -1,5 +1,9 @@
 package de.coer.api;
 
+/**
+ * Basic Identifier which are used to execute Methods between Client and Server
+ * @author Eric Dupont, Corvin Zander
+ */
 public enum BasicIdentifier {
 
 	SEND_CLIENTID("send_clientID"),

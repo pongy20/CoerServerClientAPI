@@ -7,6 +7,10 @@ import java.net.Socket;
 
 import de.coer.api.*;
 
+/**
+ * Creates a Thread for each Client the server manages to do work with many clients at the same time
+ * @author Eric Dupont, Corvin Zander
+ */
 public class CoerServerClientThread extends Thread {
 
 	private long clientID;
