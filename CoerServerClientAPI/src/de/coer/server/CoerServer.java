@@ -114,4 +114,12 @@ public class CoerServer extends Thread implements Server {
 				
 		}
 	}
+	@Override
+	public CoerServerClientThread getThreadByID(long clientID) {
+		for (CoerServerClientThread thread : clients) {
+			if (thread.getClientId() == clientID)
+				return thread;
+		}
+		return null;
+	}
 }
