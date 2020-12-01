@@ -33,6 +33,12 @@ public interface Server {
 	 */
 	public void broadcastMessage(Datapackage pack, List<CoerServerClientThread> apart);
 	/**
+	 * Broadcasts a message to all clients which are not in apart list
+	 * @param pack
+	 * @param apart Clients which should not receive the message
+	 */
+	public void broadcastMessage(Datapackage pack, CoerServerClientThread... apart);
+	/**
 	 * Returns the Thread by clientID
 	 * @param clientID
 	 * @return
