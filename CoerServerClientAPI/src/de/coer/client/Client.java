@@ -24,7 +24,7 @@ public interface Client {
 	 * @return the datapackage the server sends to response
 	 * @throws Exception
 	 */
-	public void send(Datapackage datapackage) throws Exception;
+	public void send(Datapackage datapackage);
 	/**
 	 * Method is used to register new methods the server can send
 	 * @param identifier - method identifier

@@ -1,5 +1,6 @@
 package de.coer.client;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -112,10 +113,14 @@ public class CoerClient extends Socket implements Client {
 		}
 	}
 	@Override
-	public void send(Datapackage datapackage) throws Exception {
+	public void send(Datapackage datapackage) {
 		// identifier --> <clientID> --> <object[]>
-		out.writeObject(datapackage);
-		out.flush();
+		try {
+			out.writeObject(datapackage);
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	public long getClientID() {
 		return clientID;
