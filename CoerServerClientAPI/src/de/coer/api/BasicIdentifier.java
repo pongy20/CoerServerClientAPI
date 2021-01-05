@@ -11,7 +11,7 @@ public enum BasicIdentifier {
 	DISCONNECT_CLIENT("disconnect_client"),
 	LOGOUT_ACCESSED("logout_accessed");
 	
-	String name;
+	private final String name;
 	
 	private BasicIdentifier(String name) {
 		this.name = name;

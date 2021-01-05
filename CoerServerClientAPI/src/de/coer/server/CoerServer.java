@@ -19,14 +19,14 @@ public class CoerServer extends Thread implements Server {
 
 	public static boolean debug = true;
 	
-	private int port;
+	private final int port;
 	private ServerSocket serverSocket;
 	public List<CoerServerClientThread> clients;
 	
 	public Map<String, Executeable> methods;
 	
 	
-	public CoerServer(int port) {
+	public CoerServer(final int port) {
 		this.port = port;
 		this.clients = new ArrayList<CoerServerClientThread>();
 		this.methods = new HashMap<String, Executeable>();

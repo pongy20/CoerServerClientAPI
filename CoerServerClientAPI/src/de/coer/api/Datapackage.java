@@ -13,14 +13,14 @@ public class Datapackage implements Serializable {
 	/**
 	 * To identify wich method should be executed
 	 */
-	private String identifier;
+	private final String identifier;
 	private long clientID;
 	/**
 	 * parameters
 	 */
-	private Object[] value;
+	private final Object[] value;
 	
-	public Datapackage(String identifier, long clientID, Object... value) {
+	public Datapackage(final String identifier, long clientID, final Object... value) {
 		this.identifier = identifier;
 		this.clientID = clientID;
 		this.value = value;
