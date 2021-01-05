@@ -70,7 +70,7 @@ public class CoerClient extends Socket implements Client {
 				in = new ObjectInputStream(getInputStream());
 				out = new ObjectOutputStream(getOutputStream());
 				
-				// init clientID
+				// initialize clientID
 				
 				Object loginObj = in.readObject();
 				if (loginObj instanceof Datapackage) {
@@ -80,7 +80,7 @@ public class CoerClient extends Socket implements Client {
 				} else
 					DebugMessage.sendMessage("Es wurde keine Datapackage gesendet!", true);
 				
-				// start listining
+				// start listening on Thread
 				
 				listiningThread = new Thread(new Runnable() {
 					
@@ -96,10 +96,10 @@ public class CoerClient extends Socket implements Client {
 									if (methods.containsKey(dPackage.getIdentifier())) {
 										methods.get(dPackage.getIdentifier()).execute(dPackage);
 									} else {
-										System.err.println("Identifier ist nicht registriert!");
+										System.err.println("Identifier: '" + dPackage.getIdentifier() + "' ist nicht registriert!");
 									}
 								} else
-									System.err.println("Kein Datapackage");
+									System.err.println("Es wurde eine Nachricht vom Server empfangen, die kein Datapackage war"); // TODO: create Exception in this case
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -114,7 +114,6 @@ public class CoerClient extends Socket implements Client {
 	}
 	@Override
 	public void send(Datapackage datapackage) {
-		// identifier --> <clientID> --> <object[]>
 		try {
 			out.writeObject(datapackage);
 			out.flush();
@@ -131,10 +130,14 @@ public class CoerClient extends Socket implements Client {
 	@Override
 	public void registerMethod(String identifier, Executeable executeable) {
 		if (identifier == null) {
-			System.err.println("Can't register a method with null identifier");
+			//TODO: create Exception
+			DebugMessage.sendMessage("Es muss ein Identifier gesetzt werden, um eine Methode zu registrieren.", true);
+			return;
 		}
 		if (methods.containsKey(identifier)) {
-			System.err.println("There is already an method registered using identifiert: " + identifier);
+			//TODO: create Exception
+			DebugMessage.sendMessage("Der Identifier '" + identifier + "' wurde bereits registriert!", true);
+			return;
 		}
 		methods.put(identifier, executeable);
 	}

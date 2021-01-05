@@ -1,7 +1,7 @@
 package de.coer.api;
 
 /**
- * Usefull Class to send debug Messages and disable debugmode if its not needed
+ * Useful Class to send debug Messages and disable debugmode if its not needed
  * @author Eric Dupont
  */
 public class DebugMessage {
@@ -19,5 +19,7 @@ public class DebugMessage {
 	public static void setDebugmode(boolean enabled) {
 		debug = enabled;
 	}
-	
+	public static boolean isEnabled() {
+		return debug;
+	}
 }

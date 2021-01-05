@@ -49,10 +49,10 @@ public class CoerServerClientThread extends Thread {
 					if (server.methods.containsKey(dPackage.getIdentifier())) {
 						server.methods.get(dPackage.getIdentifier()).execute(dPackage);
 					} else {
-						System.err.println("Identifier ist nicht registriert!");
+						System.err.println("Identifier ist nicht registriert!"); //TODO: create Exception
 					}
 				} else
-					System.err.println("Kein Datapackage");
+					System.err.println("Kein Datapackage");	//TODO: create Exception
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

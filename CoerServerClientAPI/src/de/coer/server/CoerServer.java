@@ -16,8 +16,6 @@ import de.coer.api.*;
  *
  */
 public class CoerServer extends Thread implements Server {
-
-	public static boolean debug = true;
 	
 	private final int port;
 	private ServerSocket serverSocket;
@@ -51,7 +49,7 @@ public class CoerServer extends Thread implements Server {
 		try {
 			serverSocket = new ServerSocket(port);
 			
-			System.out.println("Server gestartet, warten auf Clients ...");
+			DebugMessage.sendMessage("Server wurde erfolgreich gestartet! Warten auf Clients ...", false);
 			
 			while (true) {
 				Socket client = serverSocket.accept();
@@ -73,7 +71,7 @@ public class CoerServer extends Thread implements Server {
 	
 	@Override
 	public void clientAdded(Socket client) {
-		if (debug) {
+		if (DebugMessage.isEnabled()) {
 			String clientAddr = client.getInetAddress().getHostAddress();
 			int clientPort = client.getPort();
 			DebugMessage.sendMessage("Verbindung zu " + clientAddr + ":" + clientPort + " aufgebaut.", false);
@@ -90,10 +88,12 @@ public class CoerServer extends Thread implements Server {
 	@Override
 	public void registerMethod(String identifier, Executeable executeable) {
 		if (identifier == null) {
-			System.err.println("Can't register a method with null identifier");
+			System.err.println("Can't register a method with null identifier"); 	// TODO: create Exception
+			return;
 		}
 		if (methods.containsKey(identifier)) {
-			System.err.println("There is already an method registered using identifiert: " + identifier);
+			System.err.println("There is already an method registered using identifiert: " + identifier); // TODO: Create Exception
+			return;
 		}
 		methods.put(identifier, executeable);
 	}

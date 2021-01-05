@@ -1,7 +1,7 @@
 package de.coer.api;
 
 /**
- * Executeable is used to execute specific code
+ * Executeable can be used to execute specific code using a datapackage
  * @author Eric Dupont, Corvin Zander
  */
 public interface Executeable {
