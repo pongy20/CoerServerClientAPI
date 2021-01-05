@@ -4,6 +4,7 @@ import java.net.Socket;
 import java.util.List;
 
 import de.coer.api.*;
+import de.coer.api.exception.DatapackageException;
 /**
  * Interface to use a Server in Server Client model
  * @author Corvin Zander, Eric Dupont
@@ -14,8 +15,9 @@ public interface Server {
 	 * Registers a method which can be triggered by identifier and should execute the Executeable
 	 * @param identifier
 	 * @param executeable
+	 * @throws Datapackage Exception if something went wrong with the identifier
 	 */
-	public void registerMethod(String identifier, Executeable executeable);
+	public void registerMethod(String identifier, Executeable executeable) throws DatapackageException;
 	public void clientAdded(Socket client);
 	/**
 	 * Disconnects a client from server

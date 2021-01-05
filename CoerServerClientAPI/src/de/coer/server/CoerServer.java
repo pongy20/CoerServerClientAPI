@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.coer.api.*;
+import de.coer.api.exception.DatapackageException;
 
 /**
  * Implementation of Server interface in a Thread
@@ -29,19 +30,23 @@ public class CoerServer extends Thread implements Server {
 		this.clients = new ArrayList<CoerServerClientThread>();
 		this.methods = new HashMap<String, Executeable>();
 		// register default disconnect method for clients
-		registerMethod(BasicIdentifier.DISCONNECT_CLIENT.getName(), new Executeable() {
-			
-			@Override
-			public void execute(Datapackage datapackage) {
-				for (CoerServerClientThread temp : clients) {
-					if (datapackage.getClientID() == temp.getClientId()) {
-						removeClient(temp);
-						break;
-					}
-				}
+		try {
+			registerMethod(BasicIdentifier.DISCONNECT_CLIENT.getName(), new Executeable() {
 				
-			}
-		});
+				@Override
+				public void execute(Datapackage datapackage) {
+					for (CoerServerClientThread temp : clients) {
+						if (datapackage.getClientID() == temp.getClientId()) {
+							removeClient(temp);
+							break;
+						}
+					}
+					
+				}
+			});
+		} catch (DatapackageException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -49,7 +54,7 @@ public class CoerServer extends Thread implements Server {
 		try {
 			serverSocket = new ServerSocket(port);
 			
-			DebugMessage.sendMessage("Server wurde erfolgreich gestartet! Warten auf Clients ...", false);
+			DebugMessage.instance().sendMessage("Server wurde erfolgreich gestartet! Warten auf Clients ...", false);
 			
 			while (true) {
 				Socket client = serverSocket.accept();
@@ -71,29 +76,27 @@ public class CoerServer extends Thread implements Server {
 	
 	@Override
 	public void clientAdded(Socket client) {
-		if (DebugMessage.isEnabled()) {
+		if (DebugMessage.instance().isEnabled()) {
 			String clientAddr = client.getInetAddress().getHostAddress();
 			int clientPort = client.getPort();
-			DebugMessage.sendMessage("Verbindung zu " + clientAddr + ":" + clientPort + " aufgebaut.", false);
-			DebugMessage.sendMessage("Clients online: " + clients.size(), false);
+			DebugMessage.instance().sendMessage("Verbindung zu " + clientAddr + ":" + clientPort + " aufgebaut.", false);
+			DebugMessage.instance().sendMessage("Clients online: " + clients.size(), false);
 		}
 	}
 	@Override
 	public void removeClient(CoerServerClientThread thread) {
 		clients.remove(thread);
 		thread.interrupt();
-		DebugMessage.sendMessage("Verbindung zu Client " + thread.getClientId() + " wurde beendet!", false);
-		DebugMessage.sendMessage("Clients online: " + clients.size(), false);
+		DebugMessage.instance().sendMessage("Verbindung zu Client " + thread.getClientId() + " wurde beendet!", false);
+		DebugMessage.instance().sendMessage("Clients online: " + clients.size(), false);
 	}
 	@Override
-	public void registerMethod(String identifier, Executeable executeable) {
+	public void registerMethod(String identifier, Executeable executeable) throws DatapackageException {
 		if (identifier == null) {
-			System.err.println("Can't register a method with null identifier"); 	// TODO: create Exception
-			return;
+			throw new DatapackageException(DatapackageException.noIdentifier);
 		}
 		if (methods.containsKey(identifier)) {
-			System.err.println("There is already an method registered using identifiert: " + identifier); // TODO: Create Exception
-			return;
+			throw new DatapackageException(DatapackageException.identifierAlreadyExists);
 		}
 		methods.put(identifier, executeable);
 	}

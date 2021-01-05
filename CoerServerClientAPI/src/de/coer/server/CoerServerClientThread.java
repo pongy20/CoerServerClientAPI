@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import de.coer.api.*;
+import de.coer.api.exception.DatapackageException;
 
 /**
  * Creates a Thread for each Client the server manages to do work with many clients at the same time
@@ -45,14 +46,13 @@ public class CoerServerClientThread extends Thread {
 				Object obj = in.readObject();
 				if (obj instanceof Datapackage) {
 					Datapackage dPackage = (Datapackage) obj;
-					DebugMessage.sendMessage("Datapackage erhalten (Client " + dPackage.getClientID() + "): " + dPackage.getIdentifier(), false);
+					DebugMessage.instance().sendMessage("Datapackage erhalten (Client " + dPackage.getClientID() + "): " + dPackage.getIdentifier(), false);
 					if (server.methods.containsKey(dPackage.getIdentifier())) {
 						server.methods.get(dPackage.getIdentifier()).execute(dPackage);
-					} else {
-						System.err.println("Identifier ist nicht registriert!"); //TODO: create Exception
-					}
+					} else 
+						throw new DatapackageException(DatapackageException.identifierNotDeclared);
 				} else
-					System.err.println("Kein Datapackage");	//TODO: create Exception
+					throw new DatapackageException(DatapackageException.noDatapackage);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -63,7 +63,7 @@ public class CoerServerClientThread extends Thread {
 		clientID = server.clients.size();
 		Datapackage pack = new Datapackage(BasicIdentifier.SEND_CLIENTID.getName(), clientID);
 		send(pack);
-		DebugMessage.sendMessage("Client " + client.getInetAddress().getHostAddress() + ":" + client.getPort() + " wurde die ID " + clientID + " zugewiesen!", false);
+		DebugMessage.instance().sendMessage("Client " + client.getInetAddress().getHostAddress() + ":" + client.getPort() + " wurde die ID " + clientID + " zugewiesen!", false);
 	}
 	@Override
 	public void interrupt() {

@@ -6,20 +6,40 @@ package de.coer.api;
  */
 public class DebugMessage {
 
-	private static boolean debug = true;
+	/**
+	 * Using Singleton in this case to secure async thread calls
+	 */
+	private static DebugMessage instance;
 	
-	public static void sendMessage(String msg, boolean error) {
+	/**
+	 * Get the Debug Messenger
+	 * @return instance of Debug Messenger
+	 */
+	public static DebugMessage instance() {
+		if (instance == null)
+			instance = new DebugMessage("[Debug] ");
+		return instance;
+	}
+	
+	private boolean debug = true;
+	private final String prefix;
+	
+	private DebugMessage(final String prefix) {
+		this.prefix = prefix;
+	}
+	
+	public synchronized void sendMessage(final String msg, boolean error) {
 		if (!debug) return;
 		if (error)
-			System.err.println(msg);
+			System.err.println(prefix + msg);
 		else
-			System.out.println(msg);
+			System.out.println(prefix + msg);
 	}
 	
-	public static void setDebugmode(boolean enabled) {
+	public void setDebugmode(boolean enabled) {
 		debug = enabled;
 	}
-	public static boolean isEnabled() {
+	public boolean isEnabled() {
 		return debug;
 	}
 }

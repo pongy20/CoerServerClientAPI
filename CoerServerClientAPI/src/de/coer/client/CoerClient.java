@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.coer.api.*;
+import de.coer.api.exception.DatapackageException;
 
 /**
  * Implementation of Client Interface
@@ -57,15 +58,15 @@ public class CoerClient extends Socket implements Client {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			DebugMessage.sendMessage("Verbindung zum Server wurde getrennt!", false);
+			DebugMessage.instance().sendMessage("Verbindung zum Server wurde getrennt!", false);
 		}
 		
 	}
 	@Override
-	public void login() {
+	public void login() throws DatapackageException {
 		if (isConnected()) {
 			loggedIn = true;
-			DebugMessage.sendMessage("Verbindung zum Server wurde hergestellt! Versuche beim Server anzumelden...", false);
+			DebugMessage.instance().sendMessage("Verbindung zum Server wurde hergestellt! Versuche beim Server anzumelden...", false);
 			try {
 				in = new ObjectInputStream(getInputStream());
 				out = new ObjectOutputStream(getOutputStream());
@@ -76,9 +77,9 @@ public class CoerClient extends Socket implements Client {
 				if (loginObj instanceof Datapackage) {
 					Datapackage pack = (Datapackage) loginObj;
 					clientID = pack.getClientID();
-					DebugMessage.sendMessage("ClientID vom Server erhalten: " + clientID, false);
+					DebugMessage.instance().sendMessage("ClientID vom Server erhalten: " + clientID, false);
 				} else
-					DebugMessage.sendMessage("Es wurde keine Datapackage gesendet!", true);
+					throw new DatapackageException(DatapackageException.noDatapackage);
 				
 				// start listening on Thread
 				
@@ -87,19 +88,17 @@ public class CoerClient extends Socket implements Client {
 					@Override
 					public void run() {
 						while(loggedIn) {
-							
 							try {
 								Object obj = in.readObject();
 								if (obj instanceof Datapackage) {
 									Datapackage dPackage = (Datapackage) obj;
-									DebugMessage.sendMessage("Datapackage vom Server erhalten: " + "'" + dPackage.getIdentifier()+ "'", false);
+									DebugMessage.instance().sendMessage("Datapackage vom Server erhalten: " + "'" + dPackage.getIdentifier()+ "'", false);
 									if (methods.containsKey(dPackage.getIdentifier())) {
 										methods.get(dPackage.getIdentifier()).execute(dPackage);
-									} else {
-										System.err.println("Identifier: '" + dPackage.getIdentifier() + "' ist nicht registriert!");
-									}
+									} else
+										throw new DatapackageException(DatapackageException.identifierNotDeclared);
 								} else
-									System.err.println("Es wurde eine Nachricht vom Server empfangen, die kein Datapackage war"); // TODO: create Exception in this case
+									throw new DatapackageException(DatapackageException.noDatapackage);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -128,16 +127,12 @@ public class CoerClient extends Socket implements Client {
 		return loggedIn;
 	}
 	@Override
-	public void registerMethod(String identifier, Executeable executeable) {
+	public void registerMethod(String identifier, Executeable executeable) throws DatapackageException {
 		if (identifier == null) {
-			//TODO: create Exception
-			DebugMessage.sendMessage("Es muss ein Identifier gesetzt werden, um eine Methode zu registrieren.", true);
-			return;
+			throw new DatapackageException(DatapackageException.noIdentifier);
 		}
 		if (methods.containsKey(identifier)) {
-			//TODO: create Exception
-			DebugMessage.sendMessage("Der Identifier '" + identifier + "' wurde bereits registriert!", true);
-			return;
+			throw new DatapackageException(DatapackageException.identifierAlreadyExists);
 		}
 		methods.put(identifier, executeable);
 	}
