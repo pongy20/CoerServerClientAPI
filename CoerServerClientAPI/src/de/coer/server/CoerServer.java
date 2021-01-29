@@ -55,7 +55,6 @@ public class CoerServer extends Thread implements Server {
 			serverSocket = new ServerSocket(port);
 			
 			DebugMessage.instance().sendMessage("Server wurde erfolgreich gestartet! Warten auf Clients ...", false);
-			
 			while (true) {
 				Socket client = serverSocket.accept();
 				CoerServerClientThread scThread = new CoerServerClientThread(client, this);
