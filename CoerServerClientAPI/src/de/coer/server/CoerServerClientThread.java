@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 import de.coer.api.*;
 import de.coer.api.exception.DatapackageException;
@@ -38,12 +39,14 @@ public class CoerServerClientThread extends Thread {
 			
 			login();
 			
-			while(true) {
-				
-				if (isInterrupted())
+			while(!isInterrupted()) {
+				Object obj;
+				try {
+					obj = in.readObject();
+				} catch (SocketException e) {
 					break;
+				}
 				
-				Object obj = in.readObject();
 				if (obj instanceof Datapackage) {
 					Datapackage dPackage = (Datapackage) obj;
 					DebugMessage.instance().sendMessage("Datapackage erhalten (Client " + dPackage.getClientID() + "): " + dPackage.getIdentifier(), false);

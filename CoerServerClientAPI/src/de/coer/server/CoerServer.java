@@ -38,6 +38,7 @@ public class CoerServer extends Thread implements Server {
 					for (CoerServerClientThread temp : clients) {
 						if (datapackage.getClientID() == temp.getClientId()) {
 							removeClient(temp);
+							clients.remove(temp);
 							break;
 						}
 					}
@@ -55,8 +56,13 @@ public class CoerServer extends Thread implements Server {
 			serverSocket = new ServerSocket(port);
 			
 			DebugMessage.instance().sendMessage("Server wurde erfolgreich gestartet! Warten auf Clients ...", false);
-			while (true) {
-				Socket client = serverSocket.accept();
+			while (!isInterrupted()) {
+				Socket client;
+				try {
+					client = serverSocket.accept();
+				} catch (Exception e) {
+					break;		// Server is disconnected (server.close())
+				}
 				CoerServerClientThread scThread = new CoerServerClientThread(client, this);
 				scThread.start();
 				clientAdded(client);
@@ -79,12 +85,10 @@ public class CoerServer extends Thread implements Server {
 			String clientAddr = client.getInetAddress().getHostAddress();
 			int clientPort = client.getPort();
 			DebugMessage.instance().sendMessage("Verbindung zu " + clientAddr + ":" + clientPort + " aufgebaut.", false);
-			DebugMessage.instance().sendMessage("Clients online: " + clients.size(), false);
 		}
 	}
 	@Override
 	public void removeClient(CoerServerClientThread thread) {
-		clients.remove(thread);
 		thread.interrupt();
 		DebugMessage.instance().sendMessage("Verbindung zu Client " + thread.getClientId() + " wurde beendet!", false);
 		DebugMessage.instance().sendMessage("Clients online: " + clients.size(), false);
@@ -101,8 +105,8 @@ public class CoerServer extends Thread implements Server {
 	}
 
 	@Override
-	public void startServer() {
-		start();
+	public void start() {
+		super.start();
 	}
 
 	@Override
@@ -136,5 +140,19 @@ public class CoerServer extends Thread implements Server {
 				return thread;
 		}
 		return null;
+	}
+	@Override
+	public void close() {
+		for (CoerServerClientThread client : clients) {
+			removeClient(client);
+		}
+		clients.clear();
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		super.interrupt();
+		DebugMessage.instance().sendMessage("Server wurde erfolgreich gestoppt!", false);
 	}
 }

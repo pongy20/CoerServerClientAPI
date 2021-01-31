@@ -39,9 +39,7 @@ public class CoerClient extends Socket implements Client {
 			@Override
 			public void execute(Datapackage datapackage) {
 				try {
-					out.close();
-					in.close();
-					close();
+					closeChannels();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -100,7 +98,9 @@ public class CoerClient extends Socket implements Client {
 								} else
 									throw new DatapackageException(DatapackageException.noDatapackage);
 							} catch (Exception e) {
-								e.printStackTrace();
+								DebugMessage.instance().sendMessage("Verbindung zum Server verloren. Client wurde gestoppt.", true);
+								closeChannels();
+								break;
 							}
 						}
 					}
@@ -125,6 +125,16 @@ public class CoerClient extends Socket implements Client {
 	}
 	public boolean isLoggedIn() {
 		return loggedIn;
+	}
+	public void closeChannels() {
+		try {
+			out.close();
+			in.close();
+			close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	@Override
 	public void registerMethod(String identifier, Executeable executeable) throws DatapackageException {

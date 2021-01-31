@@ -27,7 +27,7 @@ public interface Server {
 	/**
 	 * Starts the server
 	 */
-	public void startServer();
+	public void start();
 	/**
 	 * Broadcasts a message to all clients which are not in apart list
 	 * @param pack
@@ -46,5 +46,9 @@ public interface Server {
 	 * @return
 	 */
 	public CoerServerClientThread getThreadByID(long clientID); 
+	/**
+	 * Stops the server
+	 */
+	public void close();
 	
 }
