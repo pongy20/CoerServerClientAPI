@@ -63,7 +63,8 @@ public class CoerServerClientThread extends Thread {
 	}
 	public void login() {
 		server.clients.add(this);
-		clientID = server.clients.size();
+		server.latestClientID += 1;
+		clientID = server.latestClientID;
 		Datapackage pack = new Datapackage(BasicIdentifier.SEND_CLIENTID.getName(), clientID);
 		send(pack);
 		DebugMessage.instance().sendMessage("Client " + client.getInetAddress().getHostAddress() + ":" + client.getPort() + " wurde die ID " + clientID + " zugewiesen!", false);
@@ -92,5 +93,8 @@ public class CoerServerClientThread extends Thread {
 	
 	public long getClientId() {
 		return clientID;
+	}
+	public void setClientID(long clientID) {
+		this.clientID = clientID;
 	}
 }

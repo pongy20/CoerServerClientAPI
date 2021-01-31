@@ -21,6 +21,7 @@ public class CoerServer extends Thread implements Server {
 	private final int port;
 	private ServerSocket serverSocket;
 	public List<CoerServerClientThread> clients;
+	public long latestClientID;
 	
 	public Map<String, Executeable> methods;
 	
@@ -29,6 +30,7 @@ public class CoerServer extends Thread implements Server {
 		this.port = port;
 		this.clients = new ArrayList<CoerServerClientThread>();
 		this.methods = new HashMap<String, Executeable>();
+		this.latestClientID = 0;
 		// register default disconnect method for clients
 		try {
 			registerMethod(BasicIdentifier.DISCONNECT_CLIENT.getName(), new Executeable() {
@@ -91,7 +93,6 @@ public class CoerServer extends Thread implements Server {
 	public void removeClient(CoerServerClientThread thread) {
 		thread.interrupt();
 		DebugMessage.instance().sendMessage("Verbindung zu Client " + thread.getClientId() + " wurde beendet!", false);
-		DebugMessage.instance().sendMessage("Clients online: " + clients.size(), false);
 	}
 	@Override
 	public void registerMethod(String identifier, Executeable executeable) throws DatapackageException {
