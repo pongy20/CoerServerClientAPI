@@ -96,5 +96,8 @@ public class CoerServerClientThread extends Thread {
 	}
 	public void setClientID(long clientID) {
 		this.clientID = clientID;
+		//TODO: Doubled Code with above
+		Datapackage pack = new Datapackage(BasicIdentifier.SEND_CLIENTID.getName(), clientID);
+		send(pack);
 	}
 }
