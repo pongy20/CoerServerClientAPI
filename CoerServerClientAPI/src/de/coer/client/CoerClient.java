@@ -45,6 +45,14 @@ public class CoerClient extends Socket implements Client {
 				}
 			}
 		});
+		registerMethod(BasicIdentifier.SEND_CLIENTID.getName(), new Executeable() {
+			
+			@Override
+			public void execute(Datapackage datapackage) {
+				CoerClient.this.clientID = datapackage.getClientID();
+				DebugMessage.instance().sendMessage("ClientID vom Server erhalten: " + clientID, false);
+			}
+		});
 	}
 
 	@Override
@@ -68,16 +76,6 @@ public class CoerClient extends Socket implements Client {
 			try {
 				in = new ObjectInputStream(getInputStream());
 				out = new ObjectOutputStream(getOutputStream());
-				
-				// initialize clientID
-				
-				Object loginObj = in.readObject();
-				if (loginObj instanceof Datapackage) {
-					Datapackage pack = (Datapackage) loginObj;
-					clientID = pack.getClientID();
-					DebugMessage.instance().sendMessage("ClientID vom Server erhalten: " + clientID, false);
-				} else
-					throw new DatapackageException(DatapackageException.noDatapackage);
 				
 				// start listening on Thread
 				
