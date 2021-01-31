@@ -50,7 +50,7 @@ public class CoerClient extends Socket implements Client {
 			@Override
 			public void execute(Datapackage datapackage) {
 				CoerClient.this.clientID = datapackage.getClientID();
-				DebugMessage.instance().sendMessage("ClientID vom Server erhalten: " + clientID, false);
+				DebugMessage.instance().sendMessage("ClientID vom Server erhalten: " + CoerClient.this.clientID, false);
 			}
 		});
 	}
