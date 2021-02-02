@@ -86,6 +86,7 @@ public class CoerClient extends Socket implements Client {
 						while(loggedIn) {
 							try {
 								Object obj = in.readObject();
+								DebugMessage.instance().sendMessage("Eine Nachricht vom Server...", false);
 								if (obj instanceof Datapackage) {
 									Datapackage dPackage = (Datapackage) obj;
 									DebugMessage.instance().sendMessage("Datapackage vom Server erhalten: " + "'" + dPackage.getIdentifier()+ "'", false);
@@ -114,6 +115,7 @@ public class CoerClient extends Socket implements Client {
 		try {
 			out.writeObject(datapackage);
 			out.flush();
+			DebugMessage.instance().sendMessage("Das Datapackage '" + datapackage.getIdentifier() + "' wurde an den Server gesendet.", false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

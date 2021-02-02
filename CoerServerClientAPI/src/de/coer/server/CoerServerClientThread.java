@@ -86,6 +86,7 @@ public class CoerServerClientThread extends Thread {
 		try {
 			out.writeObject(pack);
 			out.flush();
+			DebugMessage.instance().sendMessage("Das Datapackage '" + pack.getIdentifier() + "' wurde an den Client (ClientID: " + pack.getClientID() + ") gesendet.", false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
