@@ -22,10 +22,10 @@ public class CoerClient extends Socket implements Client {
 	
 	public Map<String, Executeable> methods;
 	
-	private Thread listiningThread;
+	protected Thread listiningThread;
 	
-	private ObjectOutputStream out;
-	private ObjectInputStream in;
+	protected ObjectOutputStream out;
+	protected ObjectInputStream in;
 	
 	public CoerClient(String host, int port) throws Exception {
 		this(host, port, -1);

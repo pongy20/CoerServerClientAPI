@@ -16,11 +16,11 @@ import de.coer.api.exception.DatapackageException;
 public class CoerServerClientThread extends Thread {
 
 	private long clientID;
-	private Socket client;
-	private CoerServer server;
+	protected Socket client;
+	protected CoerServer server;
 
-	private ObjectInputStream in;
-	private ObjectOutputStream out;
+	protected ObjectInputStream in;
+	protected ObjectOutputStream out;
 	
 	public CoerServerClientThread(Socket client, CoerServer server) {
 		this.client = client;

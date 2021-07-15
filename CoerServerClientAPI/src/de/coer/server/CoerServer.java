@@ -18,8 +18,8 @@ import de.coer.api.exception.DatapackageException;
  */
 public class CoerServer extends Thread implements Server {
 	
-	private final int port;
-	private ServerSocket serverSocket;
+	protected final int port;
+	protected ServerSocket serverSocket;
 	public List<CoerServerClientThread> clients;
 	public long latestClientID;
 	
