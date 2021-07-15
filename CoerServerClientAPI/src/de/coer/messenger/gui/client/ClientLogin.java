@@ -137,7 +137,7 @@ public class ClientLogin extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				MessengerClient client;
 				try {
-					client = new MessengerClient("localhost", 8088, usernameField.getText());
+					client = new MessengerClient("116.202.214.68", 8088, usernameField.getText());
 					client.startListining();
 					
 					MessengerFrame frame = new MessengerFrame(client);
